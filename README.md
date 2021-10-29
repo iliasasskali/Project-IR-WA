@@ -1,6 +1,6 @@
 Project-IR-WA
 
-Elias Asskali 218912 - Adam Dbouk 217294 - Joel Lamata 
+Elias Asskali 218912 - Adam Dbouk 217294 - Jordi Tortosa 217105
 
 We first have to import all necessary libraries.
 
@@ -17,3 +17,5 @@ Given a line as parameter, build_terms will:
 	Remove punctuation (except # and @)
 	Perform stemming
 	Remove empty words
+
+In the last line we can test the pre-processing
