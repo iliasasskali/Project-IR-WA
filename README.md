@@ -2,6 +2,10 @@ Project-IR-WA
 
 Elias Asskali 218912 - Adam Dbouk 217294 - Jordi Tortosa 217105
 
+------------------------------------------------------------------------
+
+PART 1
+
 We first have to import all necessary libraries.
 
 In second place we execute the next cell which will read and parse the json saving in an array called tweets the text of each tweet stored in "full_text" in the json file. It will also print the number of instances in the datasource.
@@ -19,3 +23,30 @@ Given a line as parameter, build_terms will:
 	Remove empty words
 
 In the last line we can test the pre-processing
+
+------------------------------------------------------------------------
+
+PART 2
+
+In the first cell of Part 2 Indexing and Evaluation we create the inverted index given all lines as a parameter.
+In the next cell we can see an example of the inverted index for the term 'research'.
+
+The second defined function is the search function which will return the list of docs that contain the words of the query given as a parameter.
+In the next cell we can test the function writting a query.
+
+In the third cell we create the inverted index and compute the tf, df and idf. 
+After this we define the rank_documents function, which will rank the documents based on tf-idf weights.
+
+In the part of Evaluation there are declared different evaluation techniques.
+The first evaluation technique is the function 'precision_at_k' which returns the precision of the documents k docummments as we can see in the next cell where we test the function
+The next function is the average precision which has the same parameters as 'precision_at_k' and the mean average precision which is tested in its following cell.
+In the next cell we define the Mean Reciprocal Rank using the true relevance labels, the predicted scores and the number of documents to return the reciprocal rank for the query.
+This can be tested in the following cells.
+Last but not least we compute the dcg and ndcg with the same parameters and their results can be seen in the next cells.
+
+In the next cell we load the 'word2vec language model' which will last more or less 20 minutes to load.
+The next function defined is 'vector_representation' which represents a tweet given as a parameter in a vector way. This can be tested in the following cell.
+The last function is 'plot_tweets' where given a number of lines the function plots all tweets and adds the tweet id as a label for each tweet.
+We test the method with the first 50 tweets, if we put more tweets the labels will cover the plot.
+
+There has been a problem with this Part of the project, we didn't understand the firts exercice of the 'Evaluation' part so we used the 'test_predictions.csv' given in the lab instead of using a document made by us.
