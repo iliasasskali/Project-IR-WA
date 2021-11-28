@@ -50,3 +50,21 @@ The last function is 'plot_tweets' where given a number of lines the function pl
 We test the method with the first 50 tweets, if we put more tweets the labels will cover the plot.
 
 There has been a problem with this Part of the project, we didn't understand the firts exercice of the 'Evaluation' part so we used the 'test_predictions.csv' given in the lab instead of using a document made by us.
+
+------------------------------------------------------------------------
+
+PART 3
+
+The first two cells of the project are about TF-IDF + cosine similarity given terms and couments as a parameter.
+The next one is a test to try our ranking given an example of a query.
+
+In the following cell we define our own way to score documents where we will need tweet_index to get infomation about the tweet as well as the documents and the index terms.
+The next defined function is the search function which will return the list of docs that contain the words of the query given as a parameter.
+
+And as we did before the next cell is for testing our score and check the result taking into account the given query.
+
+In the next part we have the first cell with the code for computing the document ranking using cosine similarity and tweet2vec where we will need the tweet index to extract information of the tweet.
+In the next cell we will represent all documents as a tweet vector for the given query and compute the result.
+As always the following cell is in charge of testing how good is the development before given queries.
+
+------------------------------------------------------------------------
