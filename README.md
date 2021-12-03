@@ -68,3 +68,17 @@ In the next cell we will represent all documents as a tweet vector for the given
 As always the following cell is in charge of testing how good is the development before given queries.
 
 ------------------------------------------------------------------------
+
+PART 4:
+cd Application
+python3 -m pip install virtualenv
+python3 -m venv venv
+. venv/bin/activate
+python3 -m pip install flask
+
+#Tell the terminal what application to run
+export FLASK_APP=main.py
+#Tell the terminal what application to run for windows
+set FLASK_APP=main.py
+#Run the application
+flask run
