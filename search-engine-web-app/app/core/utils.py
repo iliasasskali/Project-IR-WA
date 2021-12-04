@@ -22,7 +22,7 @@ def load_documents_corpus():
     with open('inputs/dataset_tweets_WHO.txt') as fp:
         lines = json.load(fp)
 
-    docs = []
+    docs = {}
     for tweetId in lines:
         full_tweet = lines[str(tweetId)]
         
@@ -35,7 +35,7 @@ def load_documents_corpus():
         retweets = full_tweet["retweet_count"] # Retweets
         url = f"https://twitter.com/{username}/status/{tweet_id}" # Url
 
-        docs.append(Tweet(tweetId, tweet, username, date, hashtags, likes, retweets, url))
+        docs[tweetId] = Tweet(tweetId, tweet, username, date, hashtags, likes, retweets, url)
     return docs
 
 # Read json and store the text of each tweet into a list
