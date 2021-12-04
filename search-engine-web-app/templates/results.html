@@ -1,23 +1,26 @@
 {% extends "base.html" %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block content %}
-    Found <strong>{{ found_counter }}</strong> results...
-    <hr>
-    {% for item in results_list %}
-        <div class="pb-3">
-            <div class="doc-title">
-                <a href="{{ item.url }}">{{ item.title }}...
-                </a>
-            </div>
-            <div class="cited">
-                <cite> <a href="{{ item.url }}">{{ item.url }}</a></cite>
-            </div>
-            <div class="doc-desc">
-                {{ item.doc_date }} — {{ item.description }}
-            </div>
+Found <strong>{{ found_counter }}</strong> results...
+<hr>
+{% for tweet in results_list %}
+<div class="pb-3">
+    <div class="doc-title">
+        <a href="{{ tweet.url }}">
+            {% if tweet.text | length > 78 %}
+            {{ (tweet.text[:75].strip().replace("\n", " ") + '...') }}
+            {% else %}
+            {{ tweet.text.strip().replace("\n", " ") }}
+            {% endif %}
+        </a>
+    </div>
+    <div class="cited">
+        <cite> <a href="{{ tweet.url }}">{{ tweet.url }}</a></cite>
+    </div>
+    <div class="doc-desc">
+        {{ tweet.date }} - {{ tweet.text }}
+    </div>
+</div>
 
-        </div>
-
-    {% endfor %}
+{% endfor %}
 {% endblock %}
-

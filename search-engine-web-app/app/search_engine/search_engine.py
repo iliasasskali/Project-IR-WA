@@ -1,51 +1,56 @@
-import random
+import app.search_engine.algorithms as algorithms
+import app.core.utils as utils
 
-from app.core.utils import get_random_date
+def build_tweets(tweets, ranked_docs):
+    ranked_tweets = []
+    for ranking, ranked_tweet in enumerate(ranked_docs):
+        for tweet in tweets:
+            if tweet.id == ranked_tweet:
+                ranked_tweets.append(TweetInfo(
+                    tweet.id,
+                    tweet.text,
+                    tweet.username,
+                    tweet.date,
+                    f"doc_details?id={tweet.id}&param1=1&param2=2",
+                    tweet.hashtags,
+                    tweet.likes,
+                    tweet.retweets,
+                    tweet.twitterUrl,
+                    ranking
+                ))
 
-
-def build_demo_data():
-    """
-    Helper method, just to demo the app
-    :return: a list of demo docs sorted by ranking
-    """
-    samples = ["Messier 81", "StarBurst", "Black Eye", "Cosmos Redshift", "Sombrero", "Hoags Object",
-            "Andromeda", "Pinwheel", "Cartwheel",
-            "Mayall's Object", "Milky Way", "IC 1101", "Messier 87", "Ring Nebular", "Centarus A", "Whirlpool",
-            "Canis Major Overdensity", "Virgo Stellar Stream"]
-
-    res = []
-    for index, item in enumerate(samples):
-        res.append(DocumentInfo(item, (item + " ") * 5, get_random_date(),
-                                "doc_details?id={}&param1=1&param2=2".format(index), random.random()))
-    # simulate sort by ranking
-    res.sort(key=lambda doc: doc.ranking, reverse=True)
-    return res
+    return ranked_tweets
 
 
 class SearchEngine:
-    """educational search engine"""
-    i = 12345
+    lines = utils.read_json()
+    print("Creating index...")
+    index, tf, df, idf, tweet_index = algorithms.create_index_tfidf(lines, len(lines))
+    print("Index created!")
+    print("Loading Tweets...")
+    tweets = utils.load_documents_corpus()
+    print("Tweets loaded!")
 
     def search(self, search_query):
-        print("Search query:", search_query)
-        results = []
-        ##### your code here #####
-        results = build_demo_data()  # replace with call to search algorithm
-        ##### your code here #####
+        query = algorithms.build_terms(search_query)
+        docs = set()
+        for term in query:
+            try:
+                # store in term_docs the ids of the docs that contain "term"
+                term_docs = [posting[0] for posting in self.index[term]]
 
-        return results
+                # docs = docs Union term_docs
+                docs = docs.union(term_docs)
+            except:
+                # term is not in index
+                pass
+        docs = list(docs)
+        ranked_docs = algorithms.rank_documents(query, docs, self.index, self.idf, self.tf, self.tweet_index)
 
-# TODO: Remove and use TweetInfo
-class DocumentInfo:
-    def __init__(self, title, description, doc_date, url, ranking):
-        self.title = title
-        self.description = description
-        self.doc_date = doc_date
-        self.url = url
-        self.ranking = ranking
+        return build_tweets(self.tweets, ranked_docs)
 
 class TweetInfo:
-    def __init__(self, id, text, username, date, url, hashtags, likes, retweets, twitterUrl):
+    def __init__(self, id, text, username, date, url, hashtags, likes, retweets, twitterUrl, ranking):
         self.id = id
         self.text = text
         self.username = username
@@ -55,3 +60,4 @@ class TweetInfo:
         self.retweets = retweets
         self.twitterUrl = twitterUrl
         self.url = url
+        self.ranking = ranking
