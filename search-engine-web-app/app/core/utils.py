@@ -30,7 +30,7 @@ def load_documents_corpus():
         tweet = full_tweet["full_text"] # Tweet
         username = full_tweet["user"]["screen_name"] # Username
         date = full_tweet["created_at"] # Date
-        hashtags = full_tweet["entities"]["hashtags"] # Hashtags
+        hashtags = list(map(lambda x: f"#{x['text']}", full_tweet["entities"]["hashtags"])) # Hashtags
         likes = full_tweet["favorite_count"] # Likes
         retweets = full_tweet["retweet_count"] # Retweets
         url = f"https://twitter.com/{username}/status/{tweet_id}" # Url

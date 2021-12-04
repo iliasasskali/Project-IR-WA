@@ -33,11 +33,12 @@ def doc_details():
     # getting request parameters:
     # user = request.args.get('user')
     clicked_doc_id = int(request.args["id"])
-    analytics_data.fact_clicks.append(Click(clicked_doc_id, "some desc"))
+    #analytics_data.fact_clicks.append(Click(clicked_doc_id, "some desc"))
 
-    print("click in id={} - fact_clicks len: {}".format(clicked_doc_id, len(analytics_data.fact_clicks)))
+    tweet = SearchEngine.tweets[str(clicked_doc_id)]
+    #print("click in id={} - fact_clicks len: {}".format(clicked_doc_id, len(analytics_data.fact_clicks)))
 
-    return render_template('doc_details.html')
+    return render_template('doc_details.html', tweet = tweet)
 
 
 @app.route('/stats', methods=['GET'])
