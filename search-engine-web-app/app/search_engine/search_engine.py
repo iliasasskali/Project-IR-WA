@@ -18,38 +18,22 @@ def build_tweets(tweets, ranked_docs):
             tweet.twitterUrl,
             ranking
         ))
-    # ranked_tweets = []
-    # for ranking, ranked_tweet in enumerate(ranked_docs):
-    #     for tweet in tweets:
-    #         if tweet.id == ranked_tweet:
-    #             ranked_tweets.append(TweetInfo(
-    #                 tweet.id,
-    #                 tweet.text,
-    #                 tweet.username,
-    #                 tweet.date,
-    #                 f"doc_details?id={tweet.id}&param1=1&param2=2",
-    #                 tweet.hashtags,
-    #                 tweet.likes,
-    #                 tweet.retweets,
-    #                 tweet.twitterUrl,
-    #                 ranking
-    #             ))
 
     return ranked_tweets
 
 def load_or_create_index_tfidf(lines):
     try:
-        index, tf, df, idf, tweet_index = pickle.load(open("inputs/index_tfidf.pickle", "rb"))
-        return index, tf, df, idf, tweet_index 
+        index, tf, df, idf = pickle.load(open("inputs/index_tfidf.pickle", "rb"))
+        return index, tf, df, idf 
     except:
-        index, tf, df, idf, tweet_index = algorithms.create_index_tfidf(lines, len(lines))
-        pickle.dump((index, tf, df, idf, tweet_index), open("inputs/index_tfidf.pickle", "wb"))
-        return index, tf, df, idf, tweet_index
+        index, tf, df, idf = algorithms.create_index_tfidf(lines, len(lines))
+        pickle.dump((index, tf, df, idf), open("inputs/index_tfidf.pickle", "wb"))
+        return index, tf, df, idf
 
 class SearchEngine:
     lines = utils.read_json()
     print("Creating index...")
-    index, tf, df, idf, tweet_index = load_or_create_index_tfidf(lines)
+    index, tf, df, idf = load_or_create_index_tfidf(lines)
     print("Index created!")
     print("Loading Tweets...")
     tweets = utils.load_documents_corpus()
@@ -69,8 +53,7 @@ class SearchEngine:
                 # term is not in index
                 pass
         docs = list(docs)
-        ranked_docs = algorithms.rank_documents(
-            query, docs, self.index, self.idf, self.tf, self.tweet_index)
+        ranked_docs = algorithms.rank_documents(query, docs, self.index, self.idf, self.tf)
 
         return build_tweets(self.tweets, ranked_docs)
 
