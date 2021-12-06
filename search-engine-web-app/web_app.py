@@ -25,18 +25,19 @@ def search_form_post():
     results = searchEngine.search(search_query)
     found_count = len(results)
 
-    return render_template('results.html', results_list=results, page_title="Results", found_counter=found_count)
+    return render_template('results.html', results_list=results, page_title="Results", found_counter=found_count, query = search_query)
 
 
 @app.route('/doc_details', methods=['GET'])
 def doc_details():
     # getting request parameters:
-    # user = request.args.get('user')
+    query = request.args["query"]
     clicked_doc_id = int(request.args["id"])
-    #analytics_data.fact_clicks.append(Click(clicked_doc_id, "some desc"))
+    pos = int(request.args["pos"])
+    analytics_data.fact_clicks.append(Click(clicked_doc_id, query, pos))
 
     tweet = SearchEngine.tweets[str(clicked_doc_id)]
-    #print("click in id={} - fact_clicks len: {}".format(clicked_doc_id, len(analytics_data.fact_clicks)))
+    print("click in id={} - fact_clicks len: {}".format(clicked_doc_id, analytics_data.fact_clicks))
 
     return render_template('doc_details.html', tweet = tweet)
 
@@ -48,11 +49,11 @@ def stats():
     :return:
     """
     ### Start replace with your code ###
-    docs = []
+    doc_click = []
     for clk in analytics_data.fact_clicks:
-        docs.append((corpus[clk.doc_id]))
-
-    return render_template('stats.html', clicks_data=docs)
+        doc_click.append(clk)
+#ho estem enviant amb el doc id i sense el seu contingut shauria de fer amb el corpus
+    return render_template('stats.html', clicks_data=doc_click)
     ### End replace with your code ###
 
 @app.route('/sentiment')

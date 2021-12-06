@@ -12,3 +12,41 @@
 <div><a href="/stats" >Stats</a></div>
 </body>
 </html>
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document Detail - IRWA Search Engine</title>
+</head>
+<body>
+<div class="pb-3">
+    <div class="doc-title">
+        {% if tweet.text | length > 78 %}
+        {{ (tweet.text[:75].strip().replace("\n", " ") + '...') }}
+        {% else %}
+        {{ tweet.text.strip().replace("\n", " ") }}
+        {% endif %}
+    </div>
+    <div class="cited">
+        <cite> <a href="{{ tweet.twitterUrl }}">Open in Twitter</a></cite>
+    </div>
+    <div class="doc-desc">
+        Posted by {{ tweet.username }} on {{ tweet.date }}
+    </div>
+    <div class="doc-desc">
+        {{ tweet.text }}
+    </div>
+    <div class="doc-desc">
+        likes: {{ tweet.likes }} - retweets: {{ tweet.retweets }}
+    </div>
+    <div class="doc-desc">
+        hashtags: {% for hashtag in tweet.hashtags %} {{ hashtag }} {% endfor %}
+    </div>
+</div>
+</body>
+</html>
+
+-->
+
+

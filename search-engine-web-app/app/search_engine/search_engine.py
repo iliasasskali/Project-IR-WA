@@ -2,7 +2,7 @@ import app.search_engine.algorithms as algorithms
 import app.core.utils as utils
 import pickle
 
-def build_tweets(tweets, ranked_docs):
+def build_tweets(tweets, ranked_docs, search_query):
     ranked_tweets = []
     for ranking, ranked_tweet in enumerate(ranked_docs):
         tweet = tweets[ranked_tweet]
@@ -11,7 +11,7 @@ def build_tweets(tweets, ranked_docs):
             tweet.text,
             tweet.username,
             tweet.date,
-            f"doc_details?id={tweet.id}&param1=1&param2=2",
+            f"doc_details?id={tweet.id}&query={search_query}&pos={ranking + 1}",
             tweet.hashtags,
             tweet.likes,
             tweet.retweets,
@@ -40,7 +40,10 @@ class SearchEngine:
     print("Tweets loaded!")
 
     def search(self, search_query):
-        query = algorithms.build_terms(search_query)
+    #mirar si cal retornar tots els documents en cas de que no es passi una query
+        #if search_query is None:
+            #return build_tweets(self.tweets, index)
+        query = utils.build_terms(search_query)
         docs = set()
         for term in query:
             try:
@@ -55,7 +58,7 @@ class SearchEngine:
         docs = list(docs)
         ranked_docs = algorithms.rank_documents(query, docs, self.index, self.idf, self.tf)
 
-        return build_tweets(self.tweets, ranked_docs)
+        return build_tweets(self.tweets, ranked_docs, search_query)
 
 
 class TweetInfo:

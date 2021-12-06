@@ -3,15 +3,16 @@
 {% block content %}
     Quick sample...
     <hr>
-    {% for doc in clicks_data %}
+    {% for click in clicks_data %}
         <div class="pb-3">
             <div class="">
-                {{ doc.title }}
+                tweet_id: {{ click.doc_id }}
             </div>
             <div class="">
+                query used: {{click.query}}
             </div>
             <div class="">
-                {{ doc.doc_date }} — {{ doc.description }}
+                tweet ranked at pos: {{ click.pos }}
             </div>
 
         </div>
@@ -19,6 +20,3 @@
     {% endfor %}
 {% endblock %}
 
-
-</body>
-</html>

@@ -1,10 +1,11 @@
 class AnalyticsData:
     fact_clicks = []
-    fact_two = []
+    fact_queries = []
     fact_three = []
 
 
 class Click:
-    def __init__(self, doc_id, description):
+    def __init__(self, doc_id, query, pos):
         self.doc_id = doc_id
-        self.description = description
+        self.query = query
+        self.pos = pos

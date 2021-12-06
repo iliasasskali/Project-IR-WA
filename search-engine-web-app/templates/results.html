@@ -1,24 +1,34 @@
 {% extends "base.html" %}
 {% block page_title %}{{ page_title }}{% endblock %}
 {% block content %}
-Found <strong>{{ found_counter }}</strong> results...
-<hr>
+Found <strong>{{ found_counter }}</strong> results for the query: <strong>{{ query }}</strong>
 {% for tweet in results_list %}
 <div class="pb-3">
     <div class="doc-title">
-        <a href="{{ tweet.url }}">
-            {% if tweet.text | length > 78 %}
-            {{ (tweet.text[:75].strip().replace("\n", " ") + '...') }}
+        <hr>
+        <strong>
+            {% if tweet.text | length > 50 %}
+            {{ (tweet.text[:49].strip().replace("\n", " ") + '...') }}
             {% else %}
             {{ tweet.text.strip().replace("\n", " ") }}
             {% endif %}
-        </a>
+        </strong>
     </div>
     <div class="cited">
-        <cite> <a href="{{ tweet.url }}">{{ tweet.url }}</a></cite>
+        <cite> <a href="{{ tweet.url }}">Click to see the whole tweet...</a></cite>
     </div>
     <div class="doc-desc">
         {{ tweet.date }} - {{ tweet.text }}
+    </div>
+    <div class="doc-desc">
+        <a>
+            <img src="{{ url_for('static', filename='twitter_like.png') }}"/>
+            <span> <strong>{{ tweet.likes }}</strong> </span>
+        </a>
+        <a>
+            <img src="{{ url_for('static', filename='twitter_retweet.png') }}"/>
+            <span> <strong>{{ tweet.retweets }}</strong> </span>
+        </a>
     </div>
 </div>
 
