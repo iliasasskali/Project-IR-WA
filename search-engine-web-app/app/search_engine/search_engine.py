@@ -39,10 +39,8 @@ class SearchEngine:
     tweets = utils.load_documents_corpus()
     print("Tweets loaded!")
 
-    def search(self, search_query):
-    #mirar si cal retornar tots els documents en cas de que no es passi una query
-        #if search_query is None:
-            #return build_tweets(self.tweets, index)
+    def search(self, search_query, search_id):
+
         query = utils.build_terms(search_query)
         docs = set()
         for term in query:
