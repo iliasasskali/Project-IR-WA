@@ -29,6 +29,7 @@ def load_documents_corpus():
         lines = json.load(fp)
 
     docs = {}
+    max_popularity = 0 # Popularity is 0.4*likes + 0.6*retweets, we want to find max to normalize
     for tweetId in lines:
         full_tweet = lines[str(tweetId)]
         
@@ -83,3 +84,10 @@ def build_terms(line):
     line = [w.strip(string.punctuation.replace('#', '').replace('@', '')) for w in line] ## Remove punctuation except # and @
     line = [stemmer.stem(w) for w in line if w!=''] ## perform stemming and remove empty words
     return line
+
+def get_max_popularity_score(docs, tweets):
+    max_popularity = 0
+    for doc in docs:
+        popularity = (0.4*tweets[doc].likes) + (0.6*tweets[doc].retweets)
+        if (popularity > max_popularity): max_popularity = popularity
+    return max_popularity

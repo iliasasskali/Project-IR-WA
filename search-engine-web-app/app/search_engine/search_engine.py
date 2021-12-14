@@ -56,7 +56,11 @@ class SearchEngine:
                 # term is not in index
                 pass
         docs = list(docs)
-        ranked_docs = algorithms.rank_documents(query, docs, self.index, self.idf, self.tf)
+        
+        # Get max popularity score from the documents containing at least a term
+        max_popularity = utils.get_max_popularity_score(docs, self.tweets)
+
+        ranked_docs = algorithms.rank_documents(query, docs, self.index, self.idf, self.tf, max_popularity, self.tweets)
 
         return build_tweets(self.tweets, ranked_docs, search_query)
 

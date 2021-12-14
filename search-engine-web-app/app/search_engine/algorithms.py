@@ -63,7 +63,7 @@ def create_index_tfidf(lines, num_documents):
     return index, tf, df, idf
 
 
-def rank_documents(terms, docs, index, idf, tf):
+def rank_documents(terms, docs, index, idf, tf, max_popularity, tweets):
     """
     Perform the ranking of the results of a search based on the tf-idf weights
     
@@ -100,8 +100,16 @@ def rank_documents(terms, docs, index, idf, tf):
     # Calculate the score of each doc 
     # compute the cosine similarity between queyVector and each docVector:
     doc_scores=[[np.dot(curDocVec, query_vector), doc] for doc, curDocVec in doc_vectors.items() ]
-    doc_scores.sort(reverse=True)
     
+    for idx, x in enumerate(doc_scores):
+        tweet_popularity_score = ((tweets[x[1]].likes * 0.4) + (tweets[x[1]].retweets * 0.6)) / max_popularity
+        #print(f"{(x[0] * 0.5)} {tweet_popularity_score}")
+        # Tf-idf is between 0 and 6, we normalize it between 0 and 1, we give 30% weight to popularity
+        doc_scores[idx][0] = (x[0]*0.7/6) + (0.3*tweet_popularity_score)
+        #doc_scores[idx][0] = x[0] # Uncoment to use tfidf without popularity
+
+    doc_scores.sort(reverse=True)
+
     result_docs = [x[1] for x in doc_scores]
 
     return result_docs
