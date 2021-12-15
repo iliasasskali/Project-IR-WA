@@ -70,15 +70,17 @@ As always the following cell is in charge of testing how good is the development
 ------------------------------------------------------------------------
 
 PART 4:
+
+To represent the tweets we have created two classes, Tweet and TweetInfo, the first one has the basic info of a tweet, extracted from the json, while TweetInfo will have extra info like the url and the ranking.
+
+When we first start the web app the search engine will call read_json that will return the lines containing each one a tweet. This lines will be passed as a parameter to load_or_create_index_tfidf which will either load a pickle file containing the index, tf, df and idf or create them using create_index_tfidf and saving it in a pickle file, this will save us time creating the index each time the web app is executed as the index creation is an expensive operation. Then, we will pass the lines obtained before to load_documents_corpus which will create a dictionary with the tweet id as the key and a Tweet instance as the object.
+
+The search engine class also has a search algorithm that given a query, builds terms for the query, gets the ids of all the documents containing at least a query term and also calls with this ids the method get_max_popularity_score which will return the max popularity score from the documents passed as parameter (popularity = 0.4*likes + 0.6*retweets), then it will call rank_documents which will apply the tf-idf + cosine similarity with the added popularity score and will return the ids of the documents sorted by ranking.
+
+Finally build tweets will take this ordered list, the list of tweets and the query that lead to this ranking and a list of TweetInfo instances that will be those tweets, but as before we will add the url which will contain the tweet id, the query and the ranking, and we will also store the ranking itself.
+
 cd Application
 python3 -m pip install virtualenv
 python3 -m venv venv
 . venv/bin/activate
 python3 -m pip install flask
-
-#Tell the terminal what application to run
-export FLASK_APP=main.py
-#Tell the terminal what application to run for windows
-set FLASK_APP=main.py
-#Run the application
-flask run

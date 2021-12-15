@@ -36,7 +36,7 @@ class SearchEngine:
     index, tf, df, idf = load_or_create_index_tfidf(lines)
     print("Index created!")
     print("Loading Tweets...")
-    tweets = utils.load_documents_corpus()
+    tweets = utils.load_documents_corpus(lines)
     print("Tweets loaded!")
 
     def search(self, search_query):
@@ -61,7 +61,6 @@ class SearchEngine:
         ranked_docs = algorithms.rank_documents(query, docs, self.index, self.idf, self.tf, max_popularity, self.tweets)
 
         return build_tweets(self.tweets, ranked_docs, search_query)
-
 
 class TweetInfo:
     def __init__(self, id, text, username, date, url, hashtags, likes, retweets, twitterUrl, ranking):

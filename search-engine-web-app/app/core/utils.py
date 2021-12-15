@@ -17,7 +17,7 @@ class Tweet:
         self.retweets = retweets
         self.twitterUrl = twitterUrl
 
-def load_documents_corpus():
+def load_documents_corpus(lines):
     """
     Load documents corpus from dataset_tweets_WHO.txt file
     :return:
@@ -25,11 +25,10 @@ def load_documents_corpus():
 
     # Read json and store the text of each tweet into a list
     
-    with open('inputs/dataset_tweets_WHO.txt') as fp:
-        lines = json.load(fp)
+    #with open('inputs/dataset_tweets_WHO.txt') as fp:
+    #    lines = json.load(fp)
 
     docs = {}
-    max_popularity = 0 # Popularity is 0.4*likes + 0.6*retweets, we want to find max to normalize
     for tweetId in lines:
         full_tweet = lines[str(tweetId)]
         

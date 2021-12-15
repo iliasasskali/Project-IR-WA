@@ -103,8 +103,7 @@ def rank_documents(terms, docs, index, idf, tf, max_popularity, tweets):
     
     for idx, x in enumerate(doc_scores):
         tweet_popularity_score = ((tweets[x[1]].likes * 0.4) + (tweets[x[1]].retweets * 0.6)) / max_popularity
-        #print(f"{(x[0] * 0.5)} {tweet_popularity_score}")
-        # Tf-idf is between 0 and 6, we normalize it between 0 and 1, we give 30% weight to popularity
+        # Normalize the score between 0 and 1 by dividing by 6, we give 30% weight to popularity
         doc_scores[idx][0] = (x[0]*0.7/6) + (0.3*tweet_popularity_score)
         #doc_scores[idx][0] = x[0] # Uncoment to use tfidf without popularity
 
