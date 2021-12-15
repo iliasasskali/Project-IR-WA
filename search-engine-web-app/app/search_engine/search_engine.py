@@ -39,7 +39,7 @@ class SearchEngine:
     tweets = utils.load_documents_corpus()
     print("Tweets loaded!")
 
-    def search(self, search_query, search_id):
+    def search(self, search_query):
 
         query = utils.build_terms(search_query)
         docs = set()

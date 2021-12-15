@@ -5,6 +5,124 @@
     <title>Dashboard - IRWA Search Engine</title>
 </head>
 <body>
+<div>
+    <canvas id="ClickPerDoc" style="width:100%;max-width:600px"></canvas>
+    <script>
+            const data = {
+                labels: Object.keys(analytics_data.fact_clicks) , //No se como llegar a fact_clicks
+                datasets: [{
+                backgroundColor: Utils.CHART_COLORS.red,
+                data: Object.values(analytics_data.fact_clicks)  //No se como llegar a fact_clicks
+                }]
+            }
+            new Chart("ClickPerDoc", {
+                type: 'bar',
+                data: data,
+                options: {
+                    legend: {display: false},
+                    title: {
+                    display: true,
+                    text: "Click per document"
+                    }
+                }
+            });
+        </script>
+</div>
+<p>
+</p>
+{% for query in analytics_data.fact_queries.keys() %}
+<strong>
+    {{query.strip().replace("\n", " ")}} has been used {{analytics_data.fact_queries.values()}} times and has a total of {{query.lenght}} documents
+    <p>
+    </p>
+</strong>
+{% endfor %}
+<p>
+</p>
+<div>
+    <canvas id="UserCountry" style="width:100%;max-width:600px"></canvas>
+    <script>
+                const countries = []
+                const counter = []
+                for (user in Object.keys(analytics_data.fact_users)){
+                    if (!countries.includes(user.country)){
+                        countries.push(user.country)
+                        counter.push(1)
+                    }else{
+                        for(i = 0; i < countries.length; i++){
+                            if (countries[i] == user){
+                                counter[i] += 1
+                            }
+                        }
+                    }
+                }
+                const data1 = {
+                labels: countries,
+                datasets: [{
+                backgroundColor: Utils.CHART_COLORS.red,
+                data: counter
+                }]
+            }
+            new Chart("UserCountry", {
+                type: 'bar',
+                data: data1,
+                options: {
+                    legend: {display: false},
+                    title: {
+                    display: true,
+                    text: "Users Per Country"
+                    }
+                }
+            });
+        </script>
+</div>
+<p>
+</p>
+<div>
+    <canvas id="topQueries" style="width:100%;max-width:600px"></canvas>
+    <script>/*
+                const mostquery = 0;
+                const listquery = Object.keys(analytics_data.fact_query)
+                for(i = 0; i < listquery.length; i++){
+                    if(listquery[i] > mostquery){
 
+                    }
+                }*/
+                function sort_object(obj) {
+                    items = Object.keys(obj).map(function(key) {
+                        return [key, obj[key]];
+                    });
+                    items.sort(function(first, second) {
+                        return second[1] - first[1];
+                    });
+                    sorted_obj={}
+                    $.each(items, function(k, v) {
+                        use_key = v[0]
+                        use_value = v[1]
+                        sorted_obj[use_key] = use_value
+                    })
+                    return(sorted_obj)
+}
+                const sorted_dict = sort_object(analytics_data.fact_queries)
+                const data2 = {
+                labels: Object.keys(sorted_obj).slice(0,5),
+                datasets: [{
+                backgroundColor: Utils.CHART_COLORS.red,
+                data: Object.values(sorted_obj).slice(0,5)
+                }]
+            }
+            new Chart("topQueries", {
+                type: 'bar',
+                data: data2,
+                options: {
+                    legend: {display: false},
+                    title: {
+                    display: true,
+                    text: "Users Per Country"
+                    }
+                }
+            });
+        </script>
+</div>
 </body>
 </html>

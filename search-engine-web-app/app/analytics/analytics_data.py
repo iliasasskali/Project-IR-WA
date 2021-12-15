@@ -1,5 +1,4 @@
 import json
-import random
 
 class AnalyticsData:
     # statistics table 1
@@ -13,7 +12,7 @@ class AnalyticsData:
     fact_queries = dict([])
 
      # fact_users is a dictionary with the users info: key = user_id | value = User()
-     fact_users = dict([])
+    fact_users = dict([])
 
 
 class Click:
@@ -47,14 +46,12 @@ class Query:
         return json.dumps(self)
 
 class User:
-    def __init__(self, ip, browser, platform, date, time, city, country):
+    def __init__(self, ip, browser, platform, date, url):
         self.ip = ip
         self.browser = browser
         self.platform = platform
         self.date = date
-        self.time = time
-        self.city = city
-        self.country = country
+        self.url = url
 
     def to_json(self):
         return self.__dict__
