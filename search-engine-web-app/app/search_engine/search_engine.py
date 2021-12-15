@@ -36,7 +36,7 @@ class SearchEngine:
     index, tf, df, idf = load_or_create_index_tfidf(lines)
     print("Index created!")
     print("Loading Tweets...")
-    tweets = utils.load_documents_corpus(lines)
+    tweets = utils.load_documents_corpus()
     print("Tweets loaded!")
 
     def search(self, search_query):
