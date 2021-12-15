@@ -1,10 +1,6 @@
 import json
 
 class AnalyticsData:
-    # statistics table 1
-    # fact_clicks is a dictionary with the click counters: key = doc id | value = click counter
-    fact_clicks = dict([])
-
     # fact_results is a dictionary with the click done to a document by each query: key = doc id | value = click
     fact_results = dict([])
 
@@ -16,10 +12,11 @@ class AnalyticsData:
 
 
 class Click:
-    def __init__(self, doc_id, query, pos):
+    def __init__(self, doc_id, query, pos, count):
         self.doc_id = doc_id
         self.query = query
         self.pos = pos
+        self.count = count
 
     def to_json(self):
         return self.__dict__

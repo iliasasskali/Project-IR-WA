@@ -72,36 +72,29 @@ def doc_details():
 
     print("click in id={}".format(clicked_doc_id))
 
-    # store data in statistics table 1
-    if clicked_doc_id in analytics_data.fact_clicks.keys():
-        analytics_data.fact_clicks[clicked_doc_id] += 1
+    if clicked_doc_id in analytics_data.fact_results.keys():
+        clicked_doc = analytics_data.fact_results[clicked_doc_id]
+        clicked_doc.count = clicked_doc.count + 1
     else:
-        analytics_data.fact_clicks[clicked_doc_id] = 1
+        analytics_data.fact_results[clicked_doc_id] = Click(clicked_doc_id, query, pos, 1)
 
-    # store data in statistics table 2
-    if clicked_doc_id not in analytics_data.fact_results.keys():
-        analytics_data.fact_results[clicked_doc_id] = Click(clicked_doc_id, query, pos)
-
-    # store data in statistics table 3
     if query in analytics_data.fact_queries.keys():
         curr_query = analytics_data.fact_queries[query]
-        curr_query.count += 1
+        curr_query.count = curr_query.count + 1
     else:
         terms = query.split()
         analytics_data.fact_queries[clicked_doc_id] = Query(query, len(terms), 1)
 
-    print("fact_clicks count for id={} is {}".format(clicked_doc_id, analytics_data.fact_clicks[clicked_doc_id]))
     return render_template('doc_details.html', tweet = tweet)
 
 @app.route('/dashboard', methods=['GET'])
 def dashboard():
     visited_docs = []
-    print(analytics_data.fact_clicks.keys())
-    for doc_id in analytics_data.fact_clicks.keys():
-        doc = analytics_data.fact_clicks[doc_id]
+    for doc_id in analytics_data.fact_results.keys():
+        doc = analytics_data.fact_results[doc_id]
         visited_docs.append(doc)
     # simulate sort by ranking
-    visited_docs.sort(key=lambda doc: doc, reverse=True)
+    visited_docs.sort(key=lambda doc: doc.count, reverse=True)
 
     queries = []
     for doc_id in analytics_data.fact_queries.keys():

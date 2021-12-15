@@ -1,128 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Using Bootstrap v4.6.1 #}
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/custom.css') }}">
+    <title>{% block page_title %}{% endblock %} - IRWA Search Engine</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"
+            integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <meta charset="UTF-8">
     <title>Dashboard - IRWA Search Engine</title>
 </head>
 <body>
-<div>
-    <canvas id="ClickPerDoc" style="width:100%;max-width:600px"></canvas>
-    <script>
-            const data = {
-                labels: Object.keys(analytics_data.fact_clicks) , //No se como llegar a fact_clicks
-                datasets: [{
-                backgroundColor: Utils.CHART_COLORS.red,
-                data: Object.values(analytics_data.fact_clicks)  //No se como llegar a fact_clicks
-                }]
-            }
-            new Chart("ClickPerDoc", {
-                type: 'bar',
-                data: data,
-                options: {
-                    legend: {display: false},
-                    title: {
-                    display: true,
-                    text: "Click per document"
-                    }
-                }
-            });
+<div class="container">
+    <div class='header text-center'>
+        <a href="/sentiment">
+            <span> Sentiments </span>
+        </a>
+        <img src="{{ url_for('static', filename='logo.png') }}" width="100"/>
+        <span> IRWA Search Engine </span>
+        <a href="/dashboard">
+            <span> Dashboard </span>
+        </a>
+    </div>
+    <div class='content'>
+        <div class='header text-center'>
+            <a href="/">
+                <img src="{{ url_for('static', filename='guguel_logo.png') }}" width="300"/>
+            </a>
+        </div>
+        <script>
+            const visits_list = {{ visited_docs | tojson | safe }};
+            const queries_used = {{ queries | tojson | safe }};
+            const user_info = {{ users | tojson | safe }};
         </script>
-</div>
-<p>
-</p>
-{% for query in analytics_data.fact_queries.keys() %}
-<strong>
-    {{query.strip().replace("\n", " ")}} has been used {{analytics_data.fact_queries.values()}} times and has a total of {{query.lenght}} documents
-    <p>
-    </p>
-</strong>
-{% endfor %}
-<p>
-</p>
-<div>
-    <canvas id="UserCountry" style="width:100%;max-width:600px"></canvas>
-    <script>
-                const countries = []
-                const counter = []
-                for (user in Object.keys(analytics_data.fact_users)){
-                    if (!countries.includes(user.country)){
-                        countries.push(user.country)
-                        counter.push(1)
-                    }else{
-                        for(i = 0; i < countries.length; i++){
-                            if (countries[i] == user){
-                                counter[i] += 1
-                            }
+        <div>
+            <canvas id="visitsDoc" width="250" height="250"></canvas>
+            <script>
+            const visitsLabels = visits_list.map(item => item.doc_id);
+            const visitsData = visits_list.map(item => item.count);
+            const ctx = document.getElementById('visitsDoc').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: visitsLabels,
+                    datasets: [{
+                        label: 'number of click per doc',
+                        data: visitsData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
                         }
                     }
                 }
-                const data1 = {
-                labels: countries,
-                datasets: [{
-                backgroundColor: Utils.CHART_COLORS.red,
-                data: counter
-                }]
-            }
-            new Chart("UserCountry", {
-                type: 'bar',
-                data: data1,
-                options: {
-                    legend: {display: false},
-                    title: {
-                    display: true,
-                    text: "Users Per Country"
-                    }
-                }
             });
         </script>
-</div>
-<p>
-</p>
-<div>
-    <canvas id="topQueries" style="width:100%;max-width:600px"></canvas>
-    <script>/*
-                const mostquery = 0;
-                const listquery = Object.keys(analytics_data.fact_query)
-                for(i = 0; i < listquery.length; i++){
-                    if(listquery[i] > mostquery){
+            <h5>Verification of graph above...</h5>
+            {% for doc in visited_docs %}
+            <div class="pb-3">
+                <div class="">
+                    <span class="text-dark"> ({{ doc.count }} visits) </span> — id: {{ doc.doc_id }}
+                    — query used: {{ doc.query }}
+                </div>
+            </div>
+            {% endfor %}
+            <hr>
+        </div>
 
-                    }
-                }*/
-                function sort_object(obj) {
-                    items = Object.keys(obj).map(function(key) {
-                        return [key, obj[key]];
-                    });
-                    items.sort(function(first, second) {
-                        return second[1] - first[1];
-                    });
-                    sorted_obj={}
-                    $.each(items, function(k, v) {
-                        use_key = v[0]
-                        use_value = v[1]
-                        sorted_obj[use_key] = use_value
-                    })
-                    return(sorted_obj)
-}
-                const sorted_dict = sort_object(analytics_data.fact_queries)
-                const data2 = {
-                labels: Object.keys(sorted_obj).slice(0,5),
-                datasets: [{
-                backgroundColor: Utils.CHART_COLORS.red,
-                data: Object.values(sorted_obj).slice(0,5)
-                }]
-            }
-            new Chart("topQueries", {
+        <div>
+            <canvas id="queryCount" width="250" height="250"></canvas>
+            <script>
+            const queriesLabels = queries_used.map(item => item.query);
+            const queriesData = queries_used.map(item => item.count);
+            const ctx = document.getElementById('queryCount').getContext('2d');
+            const myChart = new Chart(ctx, {
                 type: 'bar',
-                data: data2,
+                data: {
+                    labels: queriesLabels,
+                    datasets: [{
+                        label: 'number of queries occurrences',
+                        data: queriesData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
                 options: {
-                    legend: {display: false},
-                    title: {
-                    display: true,
-                    text: "Users Per Country"
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
                     }
                 }
             });
         </script>
+            <h5>Verification of graph above...</h5>
+            {% for query in queries %}
+            <div class="pb-3">
+                <div class="">
+                    <span class="text-dark"> ({{ query.count }} times used) </span> — query: {{ query.query }}
+                    — query length: {{ query.length }}
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+            <hr>
+        </div>
+        <div>
+            <canvas id="queryLength" width="250" height="250"></canvas>
+            <script>
+            const queriesLabels = queries_used.map(item => item.query);
+            const queriesData = queries_used.map(item => item.length);
+            const ctx = document.getElementById('queryLength').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: queriesLabels,
+                    datasets: [{
+                        label: 'number of queries length',
+                        data: queriesData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    }
+                }
+            });
+        </script>
+            <h5>Verification of graph above...</h5>
+            {% for query in queries %}
+            <div class="pb-3">
+                <div class="">
+                    <span class="text-dark"> </span> — query: {{ query.query }}
+                    — query length: {{ query.length }}
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+            <hr>
+        </div>
+        <div>
+            <canvas id="usersPlatform" width="250" height="250"></canvas>
+            <script>
+            const usersLabels = user_info.map(item => item.ip);
+            const usersData = user_info.map(item => item.platform);
+            const ctx = document.getElementById('usersPlatform').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: usersLabels,
+                    datasets: [{
+                        label: 'platforms used',
+                        data: usersData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    }
+                }
+            });
+        </script>
+            <h5>Verification of graph above...</h5>
+            {% for user in users %}
+            <div class="pb-3">
+                <div class="">
+                    <span class="text-dark"> </span> — user: {{ user.ip }}
+                    — user platform: {{ user.platform }}
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+            <hr>
+        </div>
+        <div>
+            <canvas id="usersBrowser" width="250" height="250"></canvas>
+            <script>
+            const usersLabels = user_info.map(item => item.ip);
+            const usersData = user_info.map(item => item.browser);
+            const ctx = document.getElementById('usersPlatform').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: usersLabels,
+                    datasets: [{
+                        label: 'browser used',
+                        data: usersData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        }
+                    }
+                }
+            });
+        </script>
+            <h5>Verification of graph above...</h5>
+            {% for user in users %}
+            <div class="pb-3">
+                <div class="">
+                    <span class="text-dark"> </span> — user: {{ user.ip }}
+                    — user browser: {{ user.browser }}
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+            <hr>
+        </div>
+    </div>
 </div>
 </body>
 </html>
