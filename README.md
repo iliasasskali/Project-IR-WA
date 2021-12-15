@@ -92,3 +92,5 @@ In 'sentiment_form()' we will just render the html template.
 
 When it comes to the html apart from adding the UPF and other logos we also tried to show the resulting docs from a query as clean as possible, we added the likes and retweets with its corresponding icons and also an url to see the whole tweet.
 We also added the dashboard and sentiment access from any screen of the web.
+
+Finally, We have to say that we had some problems with html and javascript showing the dashbord statistics, it has been implemented but the dashboard only shows the first graphic, we don't know why it is not showing. In the report we explained all the analytics we implemented.
