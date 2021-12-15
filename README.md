@@ -79,8 +79,16 @@ The search engine class also has a search algorithm that given a query, builds t
 
 Finally build tweets will take this ordered list, the list of tweets and the query that lead to this ranking and a list of TweetInfo instances that will be those tweets, but as before we will add the url which will contain the tweet id, the query and the ranking, and we will also store the ranking itself.
 
-cd Application
-python3 -m pip install virtualenv
-python3 -m venv venv
-. venv/bin/activate
-python3 -m pip install flask
+In analytics_data we have created 4 classes, the first one is AnalyticsData, where we have created 4 dictionaries: fact_clicks (which will store the document_id as a key and a click counter as a value), fact_results (which will do the same but for each query), fact_queries (which will store the query and the term counter) and the fact_users that will store the user_id and the object User() as the value).
+The second class is Click, where we have the doc_id, with its query and the position of the document.
+The third one is Query, where we have the query with the number of documents and the number of times that has been asked. 
+And finally we have User where we have the ip as the id, the browser, platform, and date.
+We will use these classes to struct the information obtained from the web_app.py and show it in the html.
+In web_app.py we will define 'search_form()' where we will request the information from a user_agent, if the ip (which will be the id) is not in the fact_user we will add this user and its information to the dictionary.
+The next definition will be 'search_from_post()' where we will request the query and render the results.html where we will show all the results of the query.
+In 'doc_details()' we will store all the requested information in the dictionaries fact_clicks, fact_results, fact_queries, which will store the count of the document clicks and the queries.
+In 'dashboards()'  we will get all the information that we will use to do the plots and finally render the template of the dashboard.html.
+In 'sentiment_form()' we will just render the html template.
+
+When it comes to the html apart from adding the UPF and other logos we also tried to show the resulting docs from a query as clean as possible, we added the likes and retweets with its corresponding icons and also an url to see the whole tweet.
+We also added the dashboard and sentiment access from any screen of the web.
